@@ -1,7 +1,6 @@
 import axios from "axios";
 import { sha256 } from "js-sha256";
 import * as Merkle from "./Merkle";
-import * as type from "./type";
 
 const blockchainUrl = "https://blockchain.info";
 
@@ -32,8 +31,7 @@ const hashPair = ([a, b = a]: Array<Merkle.MerkleNode>): Merkle.MerkleNode => {
   return new Merkle.MerkleNode(toHex(hashed.reverse()));
 };
 
-export const hashTransaction = (t: type.Transaction): string =>
-  sha256(JSON.stringify(t));
+export const hashTransaction = (t: any): string => sha256(JSON.stringify(t));
 
 export const getMerkleRoot = (
   trs: Array<Merkle.MerkleNode>
