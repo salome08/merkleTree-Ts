@@ -1,11 +1,4 @@
 import * as functions from "./functions";
-import * as type from "./type";
-
-// export interface Transaction {
-//   id: number;
-//   amount: number;
-//   date: Date;
-// }
 
 export type MerkleProofNode = [number, MerkleNode];
 
@@ -21,42 +14,61 @@ export class MerkleNode {
   }
 }
 
-// TREE
+// MERKLE TREE
 export class MerkleTree {
   private _root: MerkleNode;
-  private height: number;
+  private _height: number;
+  private _blockId: number;
 
+  private static lastId = 0;
+
+  // Setters
+  public set root(value: MerkleNode) {
+    this._root = value;
+  }
+  public set height(value: number) {
+    this._height = value;
+  }
+
+  // Getters
   public get root(): MerkleNode {
     return this._root;
   }
-
-  constructor(transactions: Array<type.Transaction>) {
-    this._root = functions.getMerkleRoot(
-      transactions.map((tr) => new MerkleNode(functions.hashTransaction(tr)))
-    );
-    this.height = Math.ceil(Math.log2(transactions.length)) + 1;
+  public get height(): number {
+    return this._height;
+  }
+  public get blockId(): number {
+    return this._blockId;
   }
 
-  createProof(
-    trs: Array<type.Transaction>,
-    tr: type.Transaction
-  ): Array<MerkleProofNode> {
+  constructor(transactions: Array<string>) {
+    this._root = functions.getMerkleRoot(
+      transactions.map((tr) => new MerkleNode(tr))
+    );
+    this._height = Math.ceil(Math.log2(transactions.length)) + 1;
+    this._blockId = ++MerkleTree.lastId;
+  }
+
+  createProof(trs: Array<string>, tr: string): Array<MerkleProofNode> {
     const merkleProof = functions.getMerkleProof(
-      trs.map((t) => new MerkleNode(functions.hashTransaction(t))),
-      new MerkleNode(functions.hashTransaction(tr))
+      trs.map((t) => new MerkleNode(t)),
+      new MerkleNode(tr)
     );
     return merkleProof;
   }
 
-  verifyProof(trs: Array<type.Transaction>, tr: type.Transaction): boolean {
+  verifyProof(trs: Array<string>, tr: string): boolean {
     const verifiedProof = functions.getVerifyProof(
       this.createProof(trs, tr),
-      new MerkleNode(functions.hashTransaction(tr))
+      new MerkleNode(tr)
     );
     return verifiedProof.hash === this.root.hash;
   }
 
-  addLeaf(trs: Array<type.Transaction>, tr: type.Transaction): void {
-    this.constructor([...trs, tr]);
+  addLeaf(trs: Array<string>, tr: string): void {
+    this.root = functions.getMerkleRoot(
+      [...trs, tr].map((t) => new MerkleNode(t))
+    );
+    this.height = Math.ceil(Math.log2([...trs, tr].length)) + 1;
   }
 }

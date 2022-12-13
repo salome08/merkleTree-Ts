@@ -41,4 +41,27 @@ export const mockTrs = [
   },
 ];
 
+export const mockTrs2 = [
+  {
+    id: 1,
+    amount: 1000,
+    date: new Date("2022-03-25"),
+  },
+  {
+    id: 2,
+    amount: 20999,
+    date: new Date("2022-01-01"),
+  },
+  {
+    id: 3,
+    amount: 398,
+    date: new Date("2010-02-15"),
+  },
+  {
+    id: 4,
+    amount: 763,
+    date: new Date("2000-03-12"),
+  },
+];
+
 export const newLeaf = { id: 9, amount: 23380, date: new Date("1991-01-01") };

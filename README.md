@@ -1,11 +1,7 @@
-to do in final
+Merkle Tree Typescript
 
-- graphique representation add toString func to class merkletree
-- tests
-- correct readme
-- github
+(Tests with rawdata & real blockchain transactions)
 
-Tests
-=> types
-=> resultat root: b
-=> resultats proof: bon et mauvais
+- npm i
+- npm run test
+- npm run start
